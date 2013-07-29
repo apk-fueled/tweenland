@@ -82,51 +82,63 @@ function compareArrays(source, target, print) {
 
 function main() {
 	
-	//alert("hello");
+	
 	var relation = new Array(600);
+
+	var offset = new Array(600);
+
+	var avg = new Array();
 
 	var gdata = loadFileIntoArray('tweens600.txt');
 	//document.write(gdata.length+"<br/>");
-	for (var  i = 0; i < gdata.length ; i++)
-	{
+	for (var  i = 0; i < gdata.length ; i++) {
 
 		var tmp = new Array();
-		for (var j = i+1; j< gdata.length ; j++)	//0
-		{	
-			if(i != j)
-			{
+		var offsettmp = new Array();
+		for (var j = i+1; j< gdata.length ; j++) {	
+			if(i != j){
 			var diff = compareArrays(gdata[i],gdata[j],false);
 			//document.write(i +" CMP "+(i+1)+" -> "+ diff+"<br/>");
-			//writeArray(diff);
-			if(diff.length <= 147)
-			{
-				//document.write(i +" Differs with "+j+" -> "+ diff.length+"<br/>");
-
-				tmp[tmp.length] = j;
-				//document.write(relation[i][j]+" <br/>");
-			}
 			
-			//document.write(relation[i].length+" <br/>");
+				if(diff.length <= 147){
+					//document.write(i +" Differs with "+j+" -> "+ diff.length+"<br/>");
+
+					tmp[tmp.length] = j;
+					offsettmp[offsettmp.length] = diff.length - 120;
+					//document.write(relation[i][j]+" <br/>");
+				}
+				
+				//document.write(relation[i].length+" <br/>");
 			}
 		}
 		relation[i] = tmp;
+		offset[i] = offsettmp;
+	}
+	//calculate average distance
+	for(var i=0; i< offset.length; i++)
+	{
+		if(offset[i].length!=0)
+		{
+			var total=0;
+			for(var j=0; j< offset[i].length; j++)
+				total+= offset[i][j];
+
+			avg[i] = total/offset[i].length;
+		}
 	}
 
 	//Printing relation list
 	document.write(" Relatives <br/>");
 	
-	for (var i=0; i < relation.length; i++)
-	{
-		document.write(i+" : "+relation[i]+" <br/>");
+	for (var i=0; i < relation.length; i++){
+		document.write("<br/><br/>"+i+" : "+relation[i]+" <br/>"+offset[i]+" <br/>"+avg[i]+" <br/>");
 	}
 	
 
 	//printing orphans
 	document.write(" orphans <br/>");
-	for (var i=0; i < relation.length ; i++)
-	{
-		if(relation[i].length === 0)
-		{
+	for (var i=0; i < relation.length ; i++){
+		if(relation[i].length === 0){
 			document.write(i+" : "+relation[i]+" <br/>");
 		}
 	}
