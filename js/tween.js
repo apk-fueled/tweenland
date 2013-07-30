@@ -79,6 +79,35 @@ function compareArrays(source, target, print) {
 	
 }
 
+function findAvgDistance(array) {
+	var dist_all = new Array();
+	for(var i=0; i < array.length; i++) {
+		var tmp_dist = 0;
+		for(var j=0; j< array.length; j++) {
+			var dist = compareArrays(array[i],array[j],false);
+			tmp_dist = tmp_dist + dist.length;
+		}
+		dist_all[dist_all.length] = tmp_dist/600;
+	}
+
+	return dist_all;
+}
+
+function findSmallest(dist) {
+	var smallest = dist[0];
+	var smallestIndex = 0;
+
+	for(var i=1; i < dist.length; i++) {
+		if(smallest > dist[i]) {
+			smallest = dist[i];
+			smallestIndex = i;
+		}
+	}
+	alert('found smallest');
+
+	return smallestIndex ;
+
+}
 
 function main() {
 	
@@ -89,60 +118,14 @@ function main() {
 
 	var avg = new Array();
 
-	var gdata = loadFileIntoArray('tweens600.txt');
-	//document.write(gdata.length+"<br/>");
-	for (var  i = 0; i < gdata.length ; i++) {
+	var geneticData = loadFileIntoArray('tweens600.txt');
 
-		var tmp = new Array();
-		var offsettmp = new Array();
-		for (var j = i+1; j< gdata.length ; j++) {	
-			if(i != j){
-			var diff = compareArrays(gdata[i],gdata[j],false);
-			//document.write(i +" CMP "+(i+1)+" -> "+ diff+"<br/>");
-			
-				if(diff.length <= 147){
-					//document.write(i +" Differs with "+j+" -> "+ diff.length+"<br/>");
+	var avgDistance = findAvgDistance(geneticData);
+	writeArray(avgDistance);
 
-					tmp[tmp.length] = j;
-					offsettmp[offsettmp.length] = diff.length - 120;
-					//document.write(relation[i][j]+" <br/>");
-				}
-				
-				//document.write(relation[i].length+" <br/>");
-			}
-		}
-		relation[i] = tmp;
-		offset[i] = offsettmp;
-	}
-	//calculate average distance
-	for(var i=0; i< offset.length; i++)
-	{
-		if(offset[i].length!=0)
-		{
-			var total=0;
-			for(var j=0; j< offset[i].length; j++)
-				total+= offset[i][j];
+	var smallest = findSmallest(avgDistance);
 
-			avg[i] = total/offset[i].length;
-		}
-	}
+	document.write(" Smallest Index "+smallest+" <br/>");
 
-	//Printing relation list
-	document.write(" Relatives <br/>");
 	
-	for (var i=0; i < relation.length; i++){
-		document.write("<br/><br/>"+i+" : "+relation[i]+" <br/>"+offset[i]+" <br/>"+avg[i]+" <br/>");
-	}
-	
-
-	//printing orphans
-	document.write(" orphans <br/>");
-	for (var i=0; i < relation.length ; i++){
-		if(relation[i].length === 0){
-			document.write(i+" : "+relation[i]+" <br/>");
-		}
-	}
-
-	//Find Root
-
 }
